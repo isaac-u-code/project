@@ -1,0 +1,61 @@
+// 1. Generate a random number between 1 and 50
+let secretNumber = Math.floor(Math.random() * 50) + 1;
+let attemptsLeft = 7;
+
+// Grab elements from the HTML
+const guessInput = document.getElementById("userGuess");
+const submitBtn = document.getElementById("submitBtn");
+const feedback = document.getElementById("feedback");
+const attemptsSpan = document.getElementById("attemptsLeft");
+
+// 2. Listen for a click on the guess button
+submitBtn.addEventListener("click", function() {
+  let userGuess = Number(guessInput.value);
+
+  // Validate input
+  if (!userGuess || userGuess < 1 || userGuess > 50) {
+    feedback.style.color = "orange";
+    feedback.textContent = "Please enter a valid number between 1 and 50!";
+    return;
+  }
+
+  // 3. Check win condition
+  if (userGuess === secretNumber) {
+    feedback.style.color = "green";
+    feedback.textContent = "🎉 Correct! You Win!";
+    endGame();
+    return;
+  } 
+  
+  // 4. Give hints (Too high / Too low)
+  if (userGuess > secretNumber) {
+    feedback.style.color = "red";
+    feedback.textContent = "Too high! Try again.";
+  } else {
+    feedback.style.color = "blue";
+    feedback.textContent = "Too low! Try again.";
+  }
+
+  // 5. Decrease attempts
+  attemptsLeft--;
+  attemptsSpan.textContent = attemptsLeft;
+
+  // 6. Check lose condition
+  if (attemptsLeft === 0) {
+    feedback.style.color = "darkred";
+    feedback.textContent = `💥 Game Over! The number was ${secretNumber}.`;
+    endGame();
+  }
+  
+  // Clear input for next guess
+  guessInput.value = "";
+  guessInput.focus();
+});
+
+// Helper function to disable input after game ends
+function endGame() {
+  guessInput.disabled = true;
+  submitBtn.disabled = true;
+  submitBtn.style.backgroundColor = "#ccc";
+  submitBtn.style.cursor = "not-allowed";
+}
